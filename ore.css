@@ -1,0 +1,28 @@
+#update-form > .ft {
+  padding-bottom: 0;
+}
+
+#ore-form > textarea {
+  box-sizing : border-box;
+  width : 100%;
+  resize : vertical;
+}
+
+.ore-tgl {
+  display: none;
+}
+
+.ore-tgl + .ore-tgl-btn {
+  box-sizing: border-box;
+  border-style: dotted;
+  opacity: 0.4;
+  cursor: pointer;
+  padding: 0 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+.ore-tgl:checked + .ore-tgl-btn {
+  border-style: solid;
+  opacity: 0.8;
+}

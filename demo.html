@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="stylesheet" href="ori.css">
+  <meta charset="utf-8">
+  <title>Twitter UserScript Maker - Demo</title>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+  <script src="ore.js" defer></script>
+  <script src="demo.js".js" defer></script>
+  <link rel="stylesheet" href="ore.css">
+</head>
+<body>
+  <section>
+    <div id="bd" role="main">
+      <h2 class="action-information">
+        いまどうしてる？
+      </h2>
+      <form action="/intent/tweet" id="update-form" method="post">
+        <div class="hd">
+          <input name="original_referer" value="javascript" type="hidden">
+          <input name="authenticity_token" value="SOXNNAMONOHANAI" type="hidden">
+          <label for="status" id="status-label">ツイート</label>
+        </div>
+        <div class="bd ">
+          <span class="field">
+            <textarea id="status" name="status" required="" autofocus="" aria-required="true"
+              aria-describedby="post-error char-count" style="height: 59px;">
+            </textarea>
+          </span>
+        </div>
+        <div class="ft">
+          <fieldset class="submit">
+            <input class="button selected submit" value="ツイート" disabled="" type="submit">
+          </fieldset>
+        </div>
+      </form>
+    </div>
+  </section>
+</body>
+
+</html>

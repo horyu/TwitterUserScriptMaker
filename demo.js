@@ -1,0 +1,10 @@
+addFixedInputText('今日のao');
+addToggleButton('（遅刻）');
+addFixedInputText(' 5_');
+addInputText('', { pattern: '[0-9]{3,5}'});
+addFixedInputText(' 12_');
+addInputText('', { pattern: '[0-9]{3,5}'});
+addFixedInputText(' ');
+addTextarea();
+addFixedInputText(' #ルービックキューブ');
+updateTA();

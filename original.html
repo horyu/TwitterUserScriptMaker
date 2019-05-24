@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr" class="" style="display: block;">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+      <meta name="twitter:widgets:csp" content="on">
+      <title>Twitter でツイートを投稿する</title>
+      <link rel="stylesheet" type="text/css" media="screen" href="./original.css">
+      <script src="ore.js" defer></script>
+      <link rel="stylesheet" href="ore.css">
+   </head>
+   <body class=" tfw ja logged-in ltr nofooter  noloki js">
+      <div id="bd" role="main">
+         <h2 class="action-information">
+            いまどうしてる？
+         </h2>
+         <form action="https://twitter.com/intent/tweet" id="update-form" method="post">
+            <div class="hd">
+               <input type="hidden" name="authenticity_token" value="tekitou">
+               <label for="status" id="status-label">ツイート</label>
+            </div>
+            <div class="bd ">
+               <span class="field">
+               <textarea id="status" name="status" required="" autofocus="" aria-required="true" aria-describedby="post-error char-count"></textarea>
+               </span>
+            </div>
+            <div class="ft">
+               <fieldset class="submit">
+                  <input type="submit" class="button selected submit" value="ツイート" disabled="">
+               </fieldset>
+            </div>
+         </form>
+      </div>
+   </body>
+</html>
+
