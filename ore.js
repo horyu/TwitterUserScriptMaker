@@ -17,7 +17,7 @@ const makeTag = (tagName, attrs = {}, text = null) => {
     node.setAttribute(attr, attrs[attr]);
   }
   if (text) {
-    textNode = document.createTextNode(text);
+    const textNode = document.createTextNode(text);
     node.appendChild(textNode);
   }
   return node;
@@ -72,24 +72,11 @@ var addToggleButton = (value, checked = false) => {
 // 
 
 var oreForm = makeTag('form', { id: 'ore-form' });
-{
-  const oriform = document.getElementById('update-form');
-  oriform.insertAdjacentElement('afterend', oreForm);
-}
-
-
-// addFixedInputText('今日のao');
-// addToggleButton('（遅刻）');
-// addFixedInputText(' 5_');
-// addInputText('', { pattern: '[0-9]{3,5}'});
-// addFixedInputText(' 12_');
-// addInputText('', { pattern: '[0-9]{3,5}'});
-// addFixedInputText(' ');
-// addTextarea();
-// addFixedInputText(' #ルービックキューブ');
+const oriform = document.getElementById('update-form');
+oriform.insertAdjacentElement('afterend', oreForm);
 
 // 
-// Eventのハンドリング
+// 変更Eventのハンドリング
 // 
 
 const ta = document.getElementById('status');

@@ -4,26 +4,25 @@ const makeTag = (tagName, attrs = {}, text = null) => {
     node.setAttribute(attr, attrs[attr]);
   }
   if (text) {
-    textNode = document.createTextNode(text);
+    const textNode = document.createTextNode(text);
     node.appendChild(textNode);
   }
   return node;
 }
 
+const ifrm = document.getElementById('ifrm');
 {
   const btn = document.getElementById('reset');
-  btn.onclick = () => {
-    ifrm.contentDocument.location.reload(true);
-  };
-}
-const ifrm = document.getElementById('ifrm');
-// console.log(ifrm);
-{
-  const btn = document.getElementById('reload');
   btn.onclick = () => {
     for (const form of document.getElementsByTagName('form')) {
       form.reset();
     }
+  };
+}
+{
+  const btn = document.getElementById('reload');
+  btn.onclick = () => {
+    ifrm.contentDocument.location.reload(true);
   };
 }
 
@@ -32,9 +31,7 @@ const ifrm = document.getElementById('ifrm');
 // Textarea
 // ToggleButton
 
-// for (const form of document.querySelectorAll('ul > li > form')) {
 for (const form of document.getElementsByTagName('form')) {
-  // console.log(form);
   // 実際のsubmitを中止
   form.addEventListener('submit', (e) => {
     e.preventDefault();
