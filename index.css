@@ -2,7 +2,16 @@ h3 {
   margin: 15px auto;
 }
 
+#ifrm-container {
+  overflow-x: hidden;
+  overflow-y: visible;
+  resize: vertical;
+  height: 330px;
+}
+
 #ifrm {
+  overflow-y: hidden;
+  overflow-x: hidden;
   width: 100%;
-  height: 400px;
+  height: 100%;
 }
