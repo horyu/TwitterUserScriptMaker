@@ -26,6 +26,51 @@ const ifrm = document.getElementById('ifrm');
   };
 }
 
+const arrangeArea = document.getElementById('arrange-area');
+const datas = [];
+
+const datas2ifrm = () => {
+  ifrm.contentWindow.oreForm.textContent = null;
+  arrangeArea.textContent = null;
+  for(let i = 0; i < datas.length; i++) {
+    const data = datas[i];
+    data.func();
+    data.node = addLi(data.name, data.value, i);
+  }
+  ifrm.contentWindow.updateTA();
+}
+
+const makeButton = (text, func) => {
+  const btn = makeTag('button', {}, text);
+  btn.addEventListener('click', func);
+  return btn;
+};
+const addLi = (name, value, index) => {
+  const li = makeTag('li', {}, name + ": " + value);
+  const downBtn = makeButton('↓', () => {
+    if (datas[index+1]) {
+      [datas[index], datas[index+1]] = [datas[index+1], datas[index]];
+      datas2ifrm();
+    }
+  });
+  const upBtn = makeButton('↑', () => {
+    if (datas[index-1]) {
+      [datas[index-1], datas[index]] = [datas[index], datas[index-1]];
+      datas2ifrm();
+    }
+  });
+  const removeBtn = makeButton('remove', () => {
+    datas.splice(index, 1);
+    datas2ifrm();
+  });
+  // DocumentFragmentはinsertAdjacentElementでエラーを起こすので、forEachで回す
+  [downBtn, upBtn, removeBtn].forEach(ele => {
+    li.insertAdjacentElement('afterbegin', ele);
+  })
+  arrangeArea.appendChild(li);
+  return li;
+};
+
 // FixedInputText
 // InputText
 // Textarea
@@ -39,23 +84,34 @@ for (const form of document.getElementsByTagName('form')) {
   // makeボタンに機能を追加
   const submit = form.querySelector('input[type="submit"]');
   submit.addEventListener('click', () => {
-    const func = ifrm.contentWindow['add' + form.name];
     const feles = form.elements;
+    const _func = ifrm.contentWindow['add' + form.name];
+    let func;
+    const value = feles.value.value;
+    const data = {
+      name: form.name,
+      value
+    };
     switch (form.name) {
       case 'FixedInputText':
-        func(feles.value.value);
-        break;
+        if (value === '') return;
+        // InputText と同じ処理をするのでbreakしない
       case 'InputText':
-        func(feles.value.value);
+        func = () => _func(value);
+        datas.push(Object.assign(data, { func }));
         break;
       case 'Textarea':
-        console.log(feles.rows.value);
-        func(feles.value.value, feles.rows.value);
+        const rows = feles.rows.value;
+        func = () => _func(value, rows);
+        datas.push(Object.assign(data, { rows, func }));
         break;
       case 'ToggleButton':
-        func(feles.value.value, feles.checked.value);
+        if (value === '') return;
+        const checked = feles.checked.value;
+        func = () => _func(value, checked);
+        datas.push(Object.assign(data, { checked, func }));
         break;
     }
-    ifrm.contentWindow.updateTA();
+    datas2ifrm();
   });
 }
