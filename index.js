@@ -28,48 +28,70 @@ const ifrm = document.getElementById('ifrm');
 
 const arrangeArea = document.getElementById('arrange-area');
 const datas = [];
+datas.swap = (i, j) => {
+  [[datas[i], datas[j]]] = [[datas[j], datas[i]]];
+};
+
+const data2func = (data) => {
+  const f = ifrm.contentWindow['add' + data.name];
+  const value = data.value;
+  switch (data.name) {
+    case 'FixedInputText':
+      // InputText と同じ処理（違う関数）をする
+    case 'InputText':
+      return () => f(value);
+    case 'Textarea':
+      const rows = data.rows;
+      return () => f(value, rows);
+    case 'ToggleButton':
+      const checked = data.checked;
+      return () => f(value, checked);
+  }
+};
 
 const datas2ifrm = () => {
   ifrm.contentWindow.oreForm.textContent = null;
   arrangeArea.textContent = null;
   for(let i = 0; i < datas.length; i++) {
     const data = datas[i];
-    data.func();
-    data.node = addLi(data.name, data.value, i);
+    data2func(data)();
+    addLi(data.name, data.value, i);
   }
   ifrm.contentWindow.updateTA();
 }
 
-const makeButton = (text, func) => {
-  const btn = makeTag('button', {}, text);
-  btn.addEventListener('click', func);
-  return btn;
-};
-const addLi = (name, value, index) => {
-  const li = makeTag('li', {}, name + ": " + value);
-  const downBtn = makeButton('↓', () => {
-    if (datas[index+1]) {
-      [datas[index], datas[index+1]] = [datas[index+1], datas[index]];
+const addLi = (() => {
+  const makeButton = (text, func) => {
+    const btn = makeTag('button', {}, text);
+    btn.addEventListener('click', func);
+    return btn;
+  };
+
+  return (name, value, index) => {
+    const li = makeTag('li', {}, name + ": " + value);
+    const downBtn = makeButton('↓', () => {
+      if (datas[index+1]) {
+        datas.swap(index, index+1);
+        datas2ifrm();
+      }
+    });
+    const upBtn = makeButton('↑', () => {
+      if (datas[index-1]) {
+        datas.swap(index-1, index);
+        datas2ifrm();
+      }
+    });
+    const removeBtn = makeButton('remove', () => {
+      datas.splice(index, 1);
       datas2ifrm();
-    }
-  });
-  const upBtn = makeButton('↑', () => {
-    if (datas[index-1]) {
-      [datas[index-1], datas[index]] = [datas[index], datas[index-1]];
-      datas2ifrm();
-    }
-  });
-  const removeBtn = makeButton('remove', () => {
-    datas.splice(index, 1);
-    datas2ifrm();
-  });
-  // DocumentFragmentはinsertAdjacentElementでエラーを起こすので、forEachで回す
-  [downBtn, upBtn, removeBtn].forEach(ele => {
-    li.insertAdjacentElement('afterbegin', ele);
-  })
-  arrangeArea.appendChild(li);
-  return li;
-};
+    });
+    // DocumentFragmentはinsertAdjacentElementでエラーを起こすので、forEachで回す
+    [downBtn, upBtn, removeBtn].forEach(ele => {
+      li.insertAdjacentElement('afterbegin', ele);
+    })
+    arrangeArea.appendChild(li);
+  };
+})();
 
 // FixedInputText
 // InputText
@@ -85,31 +107,24 @@ for (const form of document.getElementsByTagName('form')) {
   const submit = form.querySelector('input[type="submit"]');
   submit.addEventListener('click', () => {
     const feles = form.elements;
-    const _func = ifrm.contentWindow['add' + form.name];
-    let func;
+    const name = form.name;
     const value = feles.value.value;
-    const data = {
-      name: form.name,
-      value
-    };
+    const data = { name, value };
     switch (form.name) {
       case 'FixedInputText':
         if (value === '') return;
-        // InputText と同じ処理をするのでbreakしない
+        // InputText と同じdata構造
       case 'InputText':
-        func = () => _func(value);
-        datas.push(Object.assign(data, { func }));
+        datas.push(Object.assign(data, {}));
         break;
       case 'Textarea':
         const rows = feles.rows.value;
-        func = () => _func(value, rows);
-        datas.push(Object.assign(data, { rows, func }));
+        datas.push(Object.assign(data, { rows }));
         break;
       case 'ToggleButton':
         if (value === '') return;
         const checked = feles.checked.value;
-        func = () => _func(value, checked);
-        datas.push(Object.assign(data, { checked, func }));
+        datas.push(Object.assign(data, { checked }));
         break;
     }
     datas2ifrm();
