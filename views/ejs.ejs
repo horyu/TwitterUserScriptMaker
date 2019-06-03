@@ -1,0 +1,18 @@
+// ==UserScript==
+// @name         <%- scriptName %>
+// @namespace    https://your-user-script.com/<%- encodedScriptName %>/
+// @include      https://twitter.com/intent/tweet?is<%- encodedScriptName %>=true
+// @version      <%- date %>
+// @run-at       document-end
+// @grant        none
+// ==/UserScript==
+
+//////////////////////////////////////////////////////////////////////////////
+// 下記のURLをブックマークしてお使いください
+// https://twitter.com/intent/tweet?is<%- encodedScriptName %>=true
+//////////////////////////////////////////////////////////////////////////////
+
+var win = window;
+win.datas = <%- datas %>;
+
+<%- include('../public/ore.js'); %>

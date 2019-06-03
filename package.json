@@ -1,0 +1,24 @@
+{
+  "name": "twitter-userscript-maker",
+  "version": "1.0.0",
+  "description": "形式化されたツイートを毎日する人の入力補助フォームを生成するUserScriptを作成するためのページ。",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/horyu/TwitterUserScriptMaker.git"
+  },
+  "author": "horyu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/horyu/TwitterUserScriptMaker/issues"
+  },
+  "homepage": "https://github.com/horyu/TwitterUserScriptMaker#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.17.1"
+  }
+}
