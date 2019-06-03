@@ -1,10 +1,4 @@
-addFixedInputText('今日のao');
-addToggleButton('（遅刻）');
-addFixedInputText(' 5_');
-addInputText('', { pattern: '[0-9]{3,5}'});
-addFixedInputText(' 12_');
-addInputText('', { pattern: '[0-9]{3,5}'});
-addFixedInputText(' ');
-addTextarea();
-addFixedInputText(' #ルービックキューブ');
-updateTA();
+if (typeof win === 'undefined') {
+  var win = window;
+}
+win.datas = [{"name":"FixedInputText","value":"#ルービックキューブ"},{"name":"InputText","value":""},{"name":"Textarea","value":"","rows":"2"},{"name":"ToggleButton","value":"(遅刻)","checked":"true"}];

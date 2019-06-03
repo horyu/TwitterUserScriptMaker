@@ -14,7 +14,7 @@ const ifrm = document.getElementById('ifrm');
 {
   const btn = document.getElementById('reset');
   btn.onclick = () => {
-    for (const form of document.getElementsByTagName('form')) {
+    for (const form of document.querySelectorAll('#make-area form')) {
       form.reset();
     }
   };
@@ -29,35 +29,19 @@ const ifrm = document.getElementById('ifrm');
 const arrangeArea = document.getElementById('arrange-area');
 const datas = [];
 datas.swap = (i, j) => {
-  [[datas[i], datas[j]]] = [[datas[j], datas[i]]];
+  [datas[i], datas[j]] = [datas[j], datas[i]];
 };
 
-const data2func = (data) => {
-  const f = ifrm.contentWindow['add' + data.name];
-  const value = data.value;
-  switch (data.name) {
-    case 'FixedInputText':
-      // InputText と同じ処理（違う関数）をする
-    case 'InputText':
-      return () => f(value);
-    case 'Textarea':
-      const rows = data.rows;
-      return () => f(value, rows);
-    case 'ToggleButton':
-      const checked = data.checked;
-      return () => f(value, checked);
-  }
-};
 
 const datas2ifrm = () => {
-  ifrm.contentWindow.oreForm.textContent = null;
+  ifrm.contentWindow.datas = datas;
+  ifrm.contentWindow.datas2oreform();
+
   arrangeArea.textContent = null;
   for(let i = 0; i < datas.length; i++) {
     const data = datas[i];
-    data2func(data)();
     addLi(data.name, data.value, i);
   }
-  ifrm.contentWindow.updateTA();
 }
 
 const addLi = (() => {
@@ -98,7 +82,7 @@ const addLi = (() => {
 // Textarea
 // ToggleButton
 
-for (const form of document.getElementsByTagName('form')) {
+for (const form of document.querySelectorAll('#make-area form')) {
   // 実際のsubmitを中止
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -106,25 +90,26 @@ for (const form of document.getElementsByTagName('form')) {
   // makeボタンに機能を追加
   const submit = form.querySelector('input[type="submit"]');
   submit.addEventListener('click', () => {
-    const feles = form.elements;
     const name = form.name;
+    const feles = form.elements;
     const value = feles.value.value;
     const data = { name, value };
-    switch (form.name) {
+    switch (name) {
       case 'FixedInputText':
         if (value === '') return;
-        // InputText と同じdata構造
+        datas.push(data);
+        break;
       case 'InputText':
-        datas.push(Object.assign(data, {}));
+        datas.push(data);
         break;
       case 'Textarea':
         const rows = feles.rows.value;
-        datas.push(Object.assign(data, { rows }));
+        datas.push({ ...data, rows });
         break;
       case 'ToggleButton':
         if (value === '') return;
         const checked = feles.checked.value;
-        datas.push(Object.assign(data, { checked }));
+        datas.push({ ...data, checked});
         break;
     }
     datas2ifrm();

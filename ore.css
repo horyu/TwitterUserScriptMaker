@@ -1,7 +1,9 @@
+/* 公式用 */
 #update-form > .ft {
   padding-bottom: 0;
 }
 
+/* 俺用 */
 #ore-form > textarea {
   box-sizing : border-box;
   width : 100%;

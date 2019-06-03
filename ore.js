@@ -1,9 +1,8 @@
-
-// 
+//
 // Utils
-// 
+//
 
-const getUniqueId = () => {
+const makeUniqueId = () => {
   let id;
   do {
     id = Math.random().toString(36).substr(2, 9);
@@ -23,115 +22,117 @@ const makeTag = (tagName, attrs = {}, text = null) => {
   return node;
 }
 
-// 
-// add*
-// 
+//
+// 配置
+//
 
-var addFixedInputText = (value) => {
-  const ele = makeTag('input', { type: 'text', class: 'autoSize', value });
-  ele.disabled = true;
-  oreForm.appendChild(ele);
-  onInputDelegate({target: ele})
-};
-
-var addInputText = (value = '', opts = {}) => {
-  const ele = makeTag('input',
-    Object.assign({ type: 'text', class: 'autoSize', value }, opts)
-  );
-  oreForm.appendChild(ele);
-  onInputDelegate({target: ele})
-};
-
-var addTextarea = (value = '', rows = '3') => {
-  const textarea = makeTag('textarea', { rows }, value);
-  oreForm.appendChild(textarea);
-};
-
-var addToggleButton = (value, checked = false) => {
-  const id = getUniqueId();
-  const input = makeTag('input', { type: 'checkbox', value, id, class: 'ore-tgl' });
-  input.checked = (checked.toString().toLowerCase() === 'true');
-  const updateValue = () => {
-    input.value = input.checked ?  value : '';
-  };
-  updateValue();
-  input.addEventListener('change', updateValue);
-  oreForm.appendChild(input);
-
-  const label = makeTag('label', { for: id, class: 'ore-tgl-btn', tabindex: '0' }, value);
-  label.addEventListener('keydown', (e) => {
-    if (e.key === ' ' || e.key === 'Enter') {
-      input.click();
-    }
-  });
-  oreForm.appendChild(label);
+const oreForm = makeTag('form', { id: 'ore-form' });
+{
+  const oriform = document.getElementById('update-form');
+  oriform.insertAdjacentElement('afterend', oreForm);
 }
 
-// 
-// 配置
-// 
+//
+// add*
+//
 
-var oreForm = makeTag('form', { id: 'ore-form' });
-const oriform = document.getElementById('update-form');
-oriform.insertAdjacentElement('afterend', oreForm);
+const add = {
+  FixedInputText: (d) => {
+    const ele = makeTag('input', { ...d, type: 'text', class: 'autoSize' });
+    ele.disabled = true;
+    oreForm.appendChild(ele);
+    onInputDelegate({target: ele})
+  },
 
-// 
-// 変更Eventのハンドリング
-// 
+  InputText: (d) => {
+    const ele = makeTag('input', { ...d, type: 'text', class: 'autoSize' });
+    oreForm.appendChild(ele);
+    onInputDelegate({target: ele})
+  },
 
-const ta = document.getElementById('status');
-var updateTA = () => {
-  ta.value = '';
-  for (let ele of oreForm.childNodes) {
-    if (ele.value) {
-      ta.value += ele.value;
-    }
+  Textarea: (d) => {
+    const {value, ...opts} = d;
+    opts.rows = opts.rows || 2;
+    const textarea = makeTag('textarea', opts, value);
+    oreForm.appendChild(textarea);
+  },
+
+  ToggleButton: (d) => {
+    const {value, ...opts} = d;
+    const checked = opts.checked || false;
+    const id = makeUniqueId();
+    const input = makeTag('input', { type: 'checkbox', value, id, class: 'ore-tgl' });
+    input.checked = (checked.toString().toLowerCase() === 'true');
+    const updateValue = () => {
+      input.value = input.checked ? value : '';
+    };
+    updateValue();
+    input.addEventListener('change', updateValue);
+    oreForm.appendChild(input);
+
+    const label = makeTag('label', { for: id, class: 'ore-tgl-btn', tabindex: '0' }, value);
+    label.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        input.click();
+      }
+    });
+    oreForm.appendChild(label);
   }
-};
-updateTA();
+}
+
+
+//
+// 変更Eventでツイート入力欄をアップデート
+//
+
+const updateTA = (() => {
+  const ta = document.getElementById('status');
+  return () => {
+    ta.value = '';
+    for (const ele of oreForm.childNodes) {
+      if (ele.value) {
+        ta.value += ele.value;
+      }
+    }
+  };
+})();
 ['input', 'change'].forEach(type => {
   oreForm.addEventListener(type, updateTA);
 });
 
-// 
+//
 // input[type="text"]の幅自動調整
 // https://stackoverflow.com/questions/3392493/adjust-width-of-input-field-to-its-input
-// 
+//
 
 const getInputValueWidth = (() => {
   // https://stackoverflow.com/a/49982135/104380
-  const copyNodeStyle = (sourceNode, targetNode) => {
+  const copyNode = (sourceNode, targetNode) => {
     const computedStyle = window.getComputedStyle(sourceNode);
     Array.from(computedStyle).forEach(key => targetNode.style.setProperty(
       key, computedStyle.getPropertyValue(key), computedStyle.getPropertyPriority(key)
     ));
-  }
+    targetNode.textContent = sourceNode.value || '';
+  };
 
-  const meassureElm = (inputelm) => {
-    // create a dummy input element for measurements
-    const meassureElm = document.createElement('span');
-    // copy the read input's styles to the dummy input
-    copyNodeStyle(inputelm, meassureElm);
-
-    // set hard-coded styles needed for propper meassuring 
-    meassureElm.style.width = 'auto';
+  const setNodeStyle = (node) => {
+    node.style.width = 'auto';
     // 10px以下だと小さすぎてやりにくい
-    meassureElm.style.minWidth = '10px';
-    meassureElm.style.position = 'absolute';
-    meassureElm.style.left = '-9999px';
-    meassureElm.style.top = '-9999px';
-    meassureElm.style.whiteSpace = 'pre';
-    meassureElm.textContent = inputelm.value || '';
+    node.style.minWidth = '10px';
+    node.style.position = 'absolute';
+    node.style.visibility = 'hidden';
+    node.style.whiteSpace = 'pre';
+  };
 
+  return (inputelm) => {
+    const meassureElm = document.createElement('span');
+    copyNode(inputelm, meassureElm);
+    setNodeStyle(meassureElm);
     document.body.appendChild(meassureElm);
     const width = meassureElm.offsetWidth;
     meassureElm.remove();
     return width;
-  }
-
-  return (input) => {
-    return meassureElm(input);
-  }
+  };
 })();
 
 const onInputDelegate = (e) => {
@@ -140,6 +141,29 @@ const onInputDelegate = (e) => {
   }
 }
 oreForm.addEventListener('input', onInputDelegate);
-for (let input of document.querySelectorAll('input.autoSize')) {
-  onInputDelegate({target: input})
+
+//
+// datasをoreformに反映させる関数の設定
+//
+
+if (typeof win === 'undefined') {
+  var win = window;
+}
+
+// iframe越しにも利用するため、winに関数を登録
+win.datas2oreform = () => {
+  oreForm.textContent = null;
+  for(const data of win.datas) {
+    const func = add[data['name']];
+    if (func) {
+      func(data);
+    } else {
+      console.error(`'${data['name']}' does not exsist!`);
+    }
+  }
+  updateTA();
+};
+
+if (win.datas) {
+  win.datas2oreform();
 }
