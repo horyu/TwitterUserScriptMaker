@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="./index.css">
   <link rel="stylesheet" href="./ore.css">
   <script src="./index.js" defer></script>
-
 </head>
 <body>
   <section>
@@ -16,8 +15,9 @@
       Twitter UserScript Maker
     </h3>
     <p>
-      <button id="reset">reset</button>
-      <button id="reload">reload</button>
+      <a href="./demo.html">demo</a>
+      <button id="reset">reset form</button>
+      <button id="reload">reload iframe</button>
     </p>
     <ul id="make-area">
       <li>
@@ -44,8 +44,8 @@
             pattern:
             <input type="text">
           </label>
-        </li>
-      </form>
+        </form>
+      </li>
       <li>
         <form name="Textarea">
           <input type="submit" value="make">
@@ -63,7 +63,7 @@
           <input type="submit" value="make">
           ToggleButton
           <br>
-          <label name="value">
+          <label>
             value:
             <input type="text" name="value" required>
           </label>
@@ -75,24 +75,22 @@
             </select>
           </label>
         </form>
-        </li>
+      </li>
     </ul>
   </section>
   <section>
     <div id="ifrm-container">
       <iframe id="ifrm" src="./original.html">
       </iframe>
-      <!-- <iframe id="ifrm" src="./demo.html">
-      </iframe> -->
     </div>
   </section>
   <section>
     <form action="makescript.user.js" id="make-form" accept-charset="UTF-8" method="get">
+      <input type="submit" value="make">
       <label>ScriptName
         <input type="text" name="scriptName" required>
       </label>
       <input type="hidden" name="datas">
-      <input type="submit" value="make">
     </form>
   </section>
   <section>
