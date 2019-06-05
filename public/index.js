@@ -40,7 +40,7 @@ const datas2ifrm = () => {
   arrangeArea.textContent = null;
   for(let i = 0; i < datas.length; i++) {
     const data = datas[i];
-    addLi(data.name, data.value, i);
+    addLi(data, i);
   }
 }
 
@@ -51,8 +51,8 @@ const addLi = (() => {
     return btn;
   };
 
-  return (name, value, index) => {
-    const li = makeTag('li', {}, name + ": " + value);
+  return (data, index) => {
+    const li = makeTag('li', {}, JSON.stringify(data));
     const downBtn = makeButton('↓', () => {
       if (datas[index+1]) {
         datas.swap(index, index+1);
