@@ -111,6 +111,10 @@ for (const form of document.querySelectorAll('#make-area form')) {
         const checked = feles.checked.value;
         datas.push({ ...data, checked});
         break;
+      case 'SelectBox':
+        if (value === '') return;
+        datas.push(data);
+        break;
     }
     datas2ifrm();
   });

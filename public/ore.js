@@ -77,6 +77,15 @@ const add = {
       }
     });
     oreForm.appendChild(label);
+  },
+
+  SelectBox: (d) => {
+    const select = makeTag('select');
+    d.value.split("\n").forEach((value) => {
+      const option = makeTag('option', { value }, value);
+      select.appendChild(option);
+    });
+    oreForm.appendChild(select);
   }
 }
 
