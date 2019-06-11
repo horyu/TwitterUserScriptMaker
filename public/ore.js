@@ -52,9 +52,11 @@ const add = {
 
   Textarea: (d) => {
     const {value, ...opts} = d;
-    opts.rows = opts.rows || 2;
+    opts.rows = parseInt(opts.rows) || 2;
     const textarea = makeTag('textarea', opts, value);
     oreForm.appendChild(textarea);
+    const height = parseInt(getComputedStyle(textarea)['line-height']) * opts.rows;
+    textarea.style.height = (height + 5) + 'px';
   },
 
   ToggleButton: (d) => {

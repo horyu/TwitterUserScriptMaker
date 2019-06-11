@@ -126,3 +126,12 @@ for (const form of document.querySelectorAll('#make-area form')) {
     form.elements.datas.value = JSON.stringify(datas);
   });
 }
+
+// textareaの表示がブラウザで異なるため、heightを設定する
+{
+  for(const textarea of document.querySelectorAll('#make-area textarea')) {
+    const rows = parseInt(textarea.getAttribute('rows')) || 2;
+    const height = rows + 0.2;
+    textarea.style.height = height + 'em';
+  }
+}
