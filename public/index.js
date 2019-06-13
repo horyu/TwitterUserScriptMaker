@@ -115,6 +115,10 @@ for (const form of document.querySelectorAll('#make-area form')) {
         if (value === '') return;
         datas.push(data);
         break;
+      case 'Datalist':
+        if (value === '') return;
+        datas.push(data);
+        break;
     }
     datas2ifrm();
   });

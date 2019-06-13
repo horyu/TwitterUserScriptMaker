@@ -88,6 +88,19 @@ const add = {
       select.appendChild(option);
     });
     oreForm.appendChild(select);
+  },
+
+  Datalist: (d) => {
+    const id = makeUniqueId();
+    const ele = makeTag('input', { list: id, class: 'autoSize' });
+    oreForm.appendChild(ele);
+    const datalist = makeTag('datalist', { id });
+    d.value.split("\n").forEach((value) => {
+      const option = makeTag('option', { value });
+      datalist.appendChild(option);
+    });
+    oreForm.appendChild(datalist);
+    onInputDelegate({target: ele})
   }
 }
 
