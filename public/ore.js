@@ -104,7 +104,6 @@ const add = {
   }
 }
 
-
 //
 // 変更Eventでツイート入力欄をアップデート
 //
@@ -123,6 +122,63 @@ const updateTA = (() => {
 ['input', 'change'].forEach(type => {
   oreForm.addEventListener(type, updateTA);
 });
+
+// 
+// 最初のfocusable要素をfocus
+// 最後のfocusable要素と元のテキストエリアへのTab遷移を設定
+// 
+
+const setTabFocus = (() => {
+  const getFocusableElements = () => Array.from(oreForm.children).filter((ele) => {
+    switch (ele.tagName) {
+      case 'LABEL':
+      case 'TEXTAREA':
+      case 'SELECT':
+        return true;
+      case 'INPUT':
+        return !(ele.disabled || ele.classList.contains('ore-tgl'));
+    }
+  });
+  const setFocus = (ele) => {
+    if (ele.tagName === 'LABEL') {
+      // https://stackoverflow.com/questions/2388164/set-focus-on-div-contenteditable-element#answer-16863913
+      ele.setAttribute('contentEditable', true);
+      const s = window.getSelection();
+      const r = document.createRange();
+      r.setStart(ele, 0);
+      r.setEnd(ele, 0);
+      s.removeAllRanges();
+      s.addRange(r);
+      ele.setAttribute('contentEditable', false);
+    } else {
+      ele.focus();
+    }
+  };
+  const ta = document.getElementById('status');
+
+  return () => {
+    const focusableEles = getFocusableElements();
+    const firstFocusable = focusableEles[0];
+    const lastFocusable = focusableEles.slice(-1)[0];
+    if (firstFocusable) {
+      setFocus(firstFocusable);
+    }
+    if (lastFocusable) {
+      lastFocusable.addEventListener('keydown', (e) => {
+        if ((e.key === 'Tab') && !(e.shiftKey || e.ctrlKey)) {
+          e.preventDefault();
+          setFocus(ta);
+        }
+      });
+      ta.addEventListener('keydown', (e) => {
+        if ((e.key === 'Tab') && e.shiftKey) {
+          e.preventDefault();
+          setFocus(lastFocusable);
+        }
+      });
+    }
+  };
+})();
 
 //
 // input[type="text"]の幅自動調整
@@ -186,6 +242,7 @@ win.datas2oreform = () => {
     }
   }
   updateTA();
+  setTabFocus();
 };
 
 if (win.datas) {
