@@ -10,21 +10,17 @@
   resize : vertical;
 }
 
-.ore-tgl {
-  display: none;
-}
-
-.ore-tgl + .ore-tgl-btn {
+#ore-form > button { 
   box-sizing: border-box;
+  border-width: initial;
   border-style: dotted;
+  padding: 0 2px;
   opacity: 0.4;
   cursor: pointer;
-  padding: 0 2px;
-  -webkit-user-select: none;
+  user-select: none;
   -moz-user-select: none;
 }
-
-.ore-tgl:checked + .ore-tgl-btn {
+#ore-form > button[data-tgl="true"] {
   border-style: solid;
   opacity: 0.8;
 }

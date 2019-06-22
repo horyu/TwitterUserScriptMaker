@@ -22,6 +22,10 @@ const makeTag = (tagName, attrs = {}, text = null) => {
   return node;
 }
 
+const checkTrue = (target) => {
+  return target.toString().toLowerCase() === 'true'
+}
+
 //
 // 配置
 //
@@ -62,23 +66,15 @@ const add = {
   ToggleButton: (d) => {
     const {value, ...opts} = d;
     const checked = opts.checked || false;
-    const id = makeUniqueId();
-    const input = makeTag('input', { type: 'checkbox', value, id, class: 'ore-tgl' });
-    input.checked = (checked.toString().toLowerCase() === 'true');
+    const button = makeTag('button', { type: 'button' }, value);
+    button.dataset.tgl = checkTrue(checked);
     const updateValue = () => {
-      input.value = input.checked ? value : '';
+      button.dataset.tgl = !checkTrue(button.dataset.tgl);
+      button.value = checkTrue(button.dataset.tgl) ? value : '';
     };
     updateValue();
-    input.addEventListener('change', updateValue);
-    oreForm.appendChild(input);
-
-    const label = makeTag('label', { for: id, class: 'ore-tgl-btn', tabindex: '0' }, value);
-    label.addEventListener('keydown', (e) => {
-      if (e.key === ' ' || e.key === 'Enter') {
-        input.click();
-      }
-    });
-    oreForm.appendChild(label);
+    button.addEventListener('click', updateValue);
+    oreForm.appendChild(button);
   },
 
   SelectBox: (d) => {
@@ -119,7 +115,7 @@ const updateTA = (() => {
     }
   };
 })();
-['input', 'change'].forEach(type => {
+['input', 'change', 'click'].forEach(type => {
   oreForm.addEventListener(type, updateTA);
 });
 
@@ -131,7 +127,7 @@ const updateTA = (() => {
 const setTabFocus = (() => {
   const getFocusableElements = () => Array.from(oreForm.children).filter((ele) => {
     switch (ele.tagName) {
-      case 'LABEL':
+      case 'BUTTON':
       case 'TEXTAREA':
       case 'SELECT':
         return true;
@@ -139,21 +135,6 @@ const setTabFocus = (() => {
         return !(ele.disabled || ele.classList.contains('ore-tgl'));
     }
   });
-  const setFocus = (ele) => {
-    if (ele.tagName === 'LABEL') {
-      // https://stackoverflow.com/questions/2388164/set-focus-on-div-contenteditable-element#answer-16863913
-      ele.setAttribute('contentEditable', true);
-      const s = window.getSelection();
-      const r = document.createRange();
-      r.setStart(ele, 0);
-      r.setEnd(ele, 0);
-      s.removeAllRanges();
-      s.addRange(r);
-      ele.setAttribute('contentEditable', false);
-    } else {
-      ele.focus();
-    }
-  };
   const ta = document.getElementById('status');
 
   return () => {
@@ -161,19 +142,19 @@ const setTabFocus = (() => {
     const firstFocusable = focusableEles[0];
     const lastFocusable = focusableEles.slice(-1)[0];
     if (firstFocusable) {
-      setFocus(firstFocusable);
+      firstFocusable.focus();
     }
     if (lastFocusable) {
       lastFocusable.addEventListener('keydown', (e) => {
         if ((e.key === 'Tab') && !(e.shiftKey || e.ctrlKey)) {
           e.preventDefault();
-          setFocus(ta);
+          ta.focus();
         }
       });
       ta.addEventListener('keydown', (e) => {
         if ((e.key === 'Tab') && e.shiftKey) {
           e.preventDefault();
-          setFocus(lastFocusable);
+          lastFocusable.focus();
         }
       });
     }
