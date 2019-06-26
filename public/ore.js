@@ -79,7 +79,7 @@ const add = {
 
   SelectBox: (d) => {
     const select = makeTag('select');
-    d.value.split("\n").forEach((value) => {
+    d.value.split('\n').forEach((value) => {
       const option = makeTag('option', { value }, value);
       select.appendChild(option);
     });
@@ -91,7 +91,7 @@ const add = {
     const ele = makeTag('input', { list: id, class: 'autoSize' });
     oreForm.appendChild(ele);
     const datalist = makeTag('datalist', { id });
-    d.value.split("\n").forEach((value) => {
+    d.value.split('\n').forEach((value) => {
       const option = makeTag('option', { value });
       datalist.appendChild(option);
     });
