@@ -77,11 +77,6 @@ const addLi = (() => {
   };
 })();
 
-// FixedInputText
-// InputText
-// Textarea
-// ToggleButton
-
 for (const form of document.querySelectorAll('#make-area form')) {
   // 実際のsubmitを中止
   form.addEventListener('submit', (e) => {

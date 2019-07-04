@@ -132,7 +132,7 @@ const setTabFocus = (() => {
       case 'SELECT':
         return true;
       case 'INPUT':
-        return !(ele.disabled || ele.classList.contains('ore-tgl'));
+        return !ele.disabled;
     }
   });
   const ta = document.getElementById('status');
