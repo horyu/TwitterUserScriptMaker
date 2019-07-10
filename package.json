@@ -19,6 +19,7 @@
   "homepage": "https://github.com/horyu/TwitterUserScriptMaker#readme",
   "dependencies": {
     "ejs": "^2.6.1",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "serve-favicon": "^2.5.0"
   }
 }
