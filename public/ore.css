@@ -10,7 +10,7 @@
   resize : vertical;
 }
 
-#ore-form > button { 
+#ore-form > button {
   box-sizing: border-box;
   border-width: initial;
   border-style: dotted;

@@ -119,10 +119,10 @@ const updateTA = (() => {
   oreForm.addEventListener(type, updateTA);
 });
 
-// 
+//
 // 最初のfocusable要素をfocus
 // 最後のfocusable要素と元のテキストエリアへのTab遷移を設定
-// 
+//
 
 const setTabFocus = (() => {
   const getFocusableElements = () => Array.from(oreForm.children).filter((ele) => {
